@@ -10,13 +10,6 @@
  * @param {TreeNode} root
  * @return {number}
  */
-
-
-/**
- * 采用层序遍历，二叉树的最大深度就是 它的层数
- *
- */
-
 //# 层序遍历
 var maxDepth = function(root) {
   let queue = [];
@@ -24,7 +17,7 @@ var maxDepth = function(root) {
   if(!root){
     return 0;
   }
-  let height=0;//二叉树的高度
+  let height = 0;
   while(queue.length){
     let length = queue.length;
     height++;
@@ -35,4 +28,19 @@ var maxDepth = function(root) {
     }
   }
   return height;
+};
+
+//# 递归
+var maxDepth = function(root) {
+  const getdepth = function(root){
+    if(!root){
+      return 0;
+    }
+    let leftdepth = getdepth(root.left);
+    let rightdepth = getdepth(root.right);
+    let depth = 1 + Math.max(leftdepth,rightdepth);
+    return depth;
+  }
+  let maxdepth = getdepth(root);
+  return maxdepth;
 };
