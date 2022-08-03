@@ -20,7 +20,7 @@
 
 返回容器可以储存的最大水量。
 
-![](E:\algorithm_note\双指针\图片\11.jpg)
+![](./图片/11.jpg)
 
 ```
 输入：[1,8,6,2,5,4,8,3,7]
@@ -328,13 +328,13 @@ var fourSum = function(nums, target) {
 
   - 当正在求的列是最矮的，此时就可以计算
 
-    ![](E:\algorithm_note\双指针\图片\42.1.jpg)
+    ![](./图片/42.1.jpg)
 
   - 当正在求的列不是最矮的，那么就无法盛到水
 
-    ![](E:\algorithm_note\双指针\图片\42.2.jpg)
+    ![](./图片/42.2.jpg)
 
-    ![](E:\algorithm_note\双指针\图片\42.3.jpg)
+    ![](./图片/42.3.jpg)
 
 ```js
 var trap = function(height) {
