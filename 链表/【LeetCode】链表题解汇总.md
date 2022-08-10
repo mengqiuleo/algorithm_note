@@ -91,6 +91,22 @@ var addTwoNumbers = function(l1, l2) {
 
 **题解思路**
 
+假设设定了双指针 p 和 q 的话，当 q 指向末尾的 NULL，p 与 q 之间相隔的元素个数为 n 时，那么删除掉 p 的下一个指针就完成了要求。
+
+- 设置虚拟节点 dummyHead 指向 head
+- 设定双指针 p 和 q，初始都指向虚拟节点 dummyHead
+- 移动 q，直到 p 与 q 之间相隔的元素个数为 n
+- 同时移动 p 与 q，直到 q 指向的为 NULL
+- 将 p 的下一个节点指向下下个节点
+
+![](./图片/19.1.jpg)
+
+![](./图片/19.2.jpg)
+
+![](./图片/19.3.jpg)
+
+![](./图片/19.4.jpg)
+
 ```js
 var removeNthFromEnd = function(head, n) {
     let ret = new ListNode(0,head);
@@ -104,8 +120,6 @@ var removeNthFromEnd = function(head, n) {
     return ret.next;
 };
 ```
-
-
 
 
 
@@ -267,7 +281,7 @@ function merge(head1, head2){
 
  **示例 1：**
 
-![](E:\algorithm_note\链表\图片\24.jpg)
+![](./图片/24.jpg)
 
 ```
 输入：head = [1,2,3,4]
@@ -327,7 +341,7 @@ k 是一个正整数，它的值小于或等于链表的长度。如果节点总
 
  **示例 1：**
 
-![](E:\algorithm_note\链表\图片\25.jpg)
+![](./图片/25.jpg)
 
 ```
 输入：head = [1,2,3,4,5], k = 2
@@ -336,7 +350,7 @@ k 是一个正整数，它的值小于或等于链表的长度。如果节点总
 
 **示例 2：**
 
-![](E:\algorithm_note\链表\图片\25.1.jpg)
+![](./图片/25.1.jpg)
 
 ```
 输入：head = [1,2,3,4,5], k = 3
@@ -508,7 +522,7 @@ var deleteDuplicates = function(head) {
 
  **示例 1：**
 
-![](E:\algorithm_note\链表\图片\83.jpg)
+![](./图片/83.jpg)
 
 ```
 输入：head = [1,1,2]
@@ -517,7 +531,7 @@ var deleteDuplicates = function(head) {
 
 **示例 2：**
 
-![](E:\algorithm_note\链表\图片\83.1.jpg)
+![](./图片/83.1.jpg)
 
 ```
 输入：head = [1,1,2,3,3]
@@ -667,6 +681,155 @@ var reverseBetween = function(head, left, right) {
         pre.next = next;
     }
     return dummyNode.next;
+};
+```
+
+
+
+## 138. 复制带随机指针的链表
+
+[138. 复制带随机指针的链表](https://leetcode.cn/problems/copy-list-with-random-pointer/)
+
+给你一个长度为 n 的链表，每个节点包含一个额外增加的随机指针 random ，该指针可以指向链表中的任何节点或空节点。
+
+构造这个链表的 深拷贝。 深拷贝应该正好由 n 个 全新 节点组成，其中每个新节点的值都设为其对应的原节点的值。新节点的 next 指针和 random 指针也都应指向复制链表中的新节点，并使原链表和复制链表中的这些指针能够表示相同的链表状态。复制链表中的指针都不应指向原链表中的节点 。
+
+例如，如果原链表中有 X 和 Y 两个节点，其中 X.random --> Y 。那么在复制链表中对应的两个节点 x 和 y ，同样有 x.random --> y 。
+
+返回复制链表的头节点。
+
+用一个由 n 个节点组成的链表来表示输入/输出中的链表。每个节点用一个 [val, random_index] 表示：
+
+val：一个表示 Node.val 的整数。
+random_index：随机指针指向的节点索引（范围从 0 到 n-1）；如果不指向任何节点，则为  null 。
+你的代码 只 接受原链表的头节点 head 作为传入参数。
+
+![](./图片/138.1.jpg)
+
+![](./图片/138.2.jpg)
+
+**题解思路**
+
+参考解题视频：[138. 复制带随机指针的链表](https://www.bilibili.com/video/BV1RL411H7RE/?vd_source=cb0f2ca83acbbbf237e17c761cf7bc37)
+
+首先，理解一下题意：
+
+这个题其实就是让我们复制一下链表，然后返回复制的链表，但是有问题的地方是：链表有一个random指针，这个指针的指向是随机的，也就是说，可能某个节点的random指针指向的是后面还没有遍历到的节点
+
+那么我们就可以遍历两次来完成，第一遍只复制当前节点的val值，第二次遍历复制节点的next,random的节点值。
+
+```js
+var copyRandomList = function(head) {
+    if(!head) return head;
+
+    let cur = head;
+    const map = new Map();
+    //第一次遍历，生成一个具有val属性的链表
+    while(cur){
+        map.set(cur, new Node(cur.val));
+        cur = cur.next;
+    }
+    //第二次遍历，根据map映射关系，将random和next指针指向对应的节点或者null
+    cur = head;
+    while(cur){
+        map.get(cur).next = map.get(cur.next) || null;
+        map.get(cur).random = map.get(cur.random) || null;
+        cur = cur.next;
+    }
+    return map.get(head);
+};
+```
+
+
+
+## 141. 环形链表
+
+[141. 环形链表](https://leetcode.cn/problems/linked-list-cycle/)
+
+给你一个链表的头节点 head ，判断链表中是否有环。
+
+如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，评测系统内部使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。注意：pos 不作为参数进行传递 。仅仅是为了标识链表的实际情况。
+
+如果链表中存在环 ，则返回 true 。 否则，返回 false 。
+
+![](./图片/141.jpg)
+
+**题解思路**
+
+每次快指针向后移动两个节点，慢指针向后移动一个节点。
+
+如果快指针移动到了链表尾部，就说明链表无环
+
+如果快慢指针相遇了，就说明链表有环
+
+**注意：**若有环，则快慢指针一定会相遇。因为快指针一定比慢指针提前进入到环中，等慢指针也进入环中后，快指针一定会追上慢指针（因为速度是慢指针的两倍），并且一定不会不相遇而直接跳过去（慢指针移动前的旧位置和移动后的新位置共22个节点，快指针一次前进22个节点，必定踩上一个）
+
+![](./图片/141.gif)
+
+```js
+var hasCycle = function(head) {
+    if(!head || !head.next) return false;
+    let slow = head.next, fast = head.next.next;
+    while(fast && fast.next){
+        slow = slow.next;
+        fast = fast.next.next;
+        if(fast === slow){
+          // 这里的注释部分：是用来求出环的第一个节点，是为了和下一题的代码保存一致加的
+            // slow = head;
+            // while(fast !== slow){
+            //     fast = fast.next;
+            //     slow = slow.next;
+            // }
+            return true;
+        }
+    }
+    return false; 
+};
+```
+
+
+
+## 142. 环形链表 II
+
+[142. 环形链表 II](https://leetcode.cn/problems/linked-list-cycle-ii/)
+
+给定一个链表的头节点  head ，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
+
+如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，评测系统内部使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。
+
+不允许修改 链表。
+
+![](./图片/142.jpg)
+
+**题解思路**
+
+- 这个题和上一个有相似之处，只不过是这个题要求我们求出环的第一个节点
+
+- **从头结点出发一个指针，从相遇节点 也出发一个指针，这两个指针每次只走一个节点， 那么当这两个指针相遇的时候就是 环形入口的节点**。
+
+- 也就是在相遇节点处，定义一个指针index1，在头结点处定一个指针index2。
+
+  让index1和index2同时移动，每次移动一个节点， 那么他们相遇的地方就是 环形入口的节点。
+
+![](./图片/142.gif)
+
+```js
+var detectCycle = function(head) {
+    if(!head || !head.next) return null;
+    let slow = head.next, fast = head.next.next;
+    while(fast && fast.next){
+        slow = slow.next;
+        fast = fast.next.next;
+        if(fast === slow){ // 此时我们已经证明了存在环
+            slow = head; //此时定义了两个节点，slow指针位于头结点出发，fast指针位于相遇节点
+            while(fast !== slow){ //当这两个节点没有相遇时，让这两个节点每次都向后移动一位
+                fast = fast.next;
+                slow = slow.next;
+            }
+            return slow;
+        }
+    }
+    return null;
 };
 ```
 
@@ -825,6 +988,62 @@ var sortList = function(head) {
 ```
 
 使用归并排序解决的题目还有：[23. 合并K个升序链表](https://leetcode.cn/problems/merge-k-sorted-lists/)
+
+
+
+## 160. 相交链表
+
+[160. 相交链表](https://leetcode.cn/problems/intersection-of-two-linked-lists/)
+
+给你两个单链表的头节点 headA 和 headB ，请你找出并返回两个单链表相交的起始节点。如果两个链表不存在相交节点，返回 null 。
+
+图示两个链表在节点 c1 开始相交：
+
+![](./图片/160.1.jpg)
+
+![](./图片/160.2.jpg)
+
+![](./图片/160.3.jpg)
+
+![](./图片/160.4.jpg)
+
+**题解思路**
+
+- curA指向链表A的头结点，curB指向链表B的头结点
+- 当画图时，让链表A和链表B的末尾对齐
+- 求出两个链表的长度，并求出两个链表长度的差值，然后让curA移动到与curB相等的位置
+- 此时我们就可以比较curA和curB是否相同，如果不相同，同时向后移动curA和curB，如果遇到curA == curB，则找到交点。否则循环退出返回空指针。
+
+参考思路：[160. 相交链表](https://www.programmercarl.com/%E9%9D%A2%E8%AF%95%E9%A2%9802.07.%E9%93%BE%E8%A1%A8%E7%9B%B8%E4%BA%A4.html#%E6%80%9D%E8%B7%AF)
+
+```js
+var getListLen = function(head){ // 求链表的长度
+    let cur = head, len = 0;
+    while(cur){
+        len++;
+        cur = cur.next;
+    }
+    return len;
+}
+
+var getIntersectionNode = function(headA, headB) {
+    let curA = headA, curB = headB;
+    let lenA = getListLen(headA), lenB = getListLen(headB);
+    if(lenA < lenB){ // 让curA为最长链表的头，lenA为其长度
+        [curA, curB] = [curB, curA];
+        [lenA, lenB] = [lenB, lenA];
+    }
+    let i = lenA - lenB; // 求长度差
+    while(i-- > 0){
+        curA = curA.next;  // 让curA和curB在同一起点上（末尾位置对齐）
+    } 
+    while(curA && curA !== curB){
+        curA = curA.next;
+        curB = curB.next;
+    }
+    return curA;
+};
+```
 
 
 
