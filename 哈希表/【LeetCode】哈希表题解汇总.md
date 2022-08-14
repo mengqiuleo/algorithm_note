@@ -755,12 +755,124 @@ var intersect = function(nums1, nums2) {
 
 ## 383.赎金信
 
-两种方法
+[383. 赎金信](https://leetcode.cn/problems/ransom-note/)
 
-https://leetcode.cn/problems/ransom-note/solution/shu-jin-xin-by-gemini-lin-m707/
+给你两个字符串：ransomNote 和 magazine ，判断 ransomNote 能不能由 magazine 里面的字符构成。
 
-https://leetcode.cn/problems/ransom-note/solution/javascriptban-jie-ti-si-lu-by-ityou-o-pgtl/
+如果可以，返回 true ；否则返回 false 。
+
+magazine 中的每个字符只能在 ransomNote 中使用一次。
+
+ 
+
+示例 1：
+
+```
+输入：ransomNote = "a", magazine = "b"
+输出：false
+```
+
+
+示例 2：
+
+```
+输入：ransomNote = "aa", magazine = "ab"
+输出：false
+```
+
+
+示例 3：
+
+```
+输入：ransomNote = "aa", magazine = "aab"
+输出：true
+```
+
+**题解思路**
+
+用一个映射记录magazine字符串中的字母及出现次数
+
+然后遍历ransomNote字符串，此时必须要保证ransomNote字符串中的某个字母出现在哈希表中，否则返回false。
+
+```js
+var canConstruct = function(ransomNote, magazine) {
+    const store = {};
+    for(let i = 0; i < magazine.length; i++){
+        if(!store[magazine[i]]){
+            store[magazine[i]] = 1;
+        } else {
+            store[magazine[i]]++;
+        }
+    }
+    for(let i = 0; i < ransomNote.length; i++){
+        if(store[ransomNote[i]]){
+            store[ransomNote[i]]--;
+        } else {
+            return false;
+        }
+    }
+    return true;
+};
+```
 
 
 
+## 454. 四数相加 II
+
+[454. 四数相加 II](https://leetcode.cn/problems/4sum-ii/)
+
+给你四个整数数组 nums1、nums2、nums3 和 nums4 ，数组长度都是 n ，请你计算有多少个元组 (i, j, k, l) 能满足：
+
+0 <= i, j, k, l < n
+nums1[i] + nums2[j] + nums3[k] + nums4[l] == 0
+
+
+示例 1：
+
+```
+输入：nums1 = [1,2], nums2 = [-2,-1], nums3 = [-1,2], nums4 = [0,2]
+输出：2
+解释：
+两个元组如下：
+
+1.(0, 0, 0, 1) -> nums1[0] + nums2[0] + nums3[0] + nums4[1] = 1 + (-2) + (-1) + 2 = 0
+
+2.(1, 1, 0, 0) -> nums1[1] + nums2[1] + nums3[0] + nums4[0] = 2 + (-1) + (-1) + 0 = 0
+```
+
+
+示例 2：
+
+```
+输入：nums1 = [0], nums2 = [0], nums3 = [0], nums4 = [0]
+输出：1
+```
+
+**题解思路**
+
+思路：在A和B中取出两个数的组合，将这两个数的和作为键，出现次数作为值加入哈希表中，循环C、D，判断C和D中是否存在两个数的和 加 AB中的俩元素的和正好是0，统计组合数
+
+四数相加，转化为两数相加，降低时间复杂度。
+
+```js
+var fourSumCount = function(nums1, nums2, nums3, nums4) {
+    const twoSumMap = new Map();
+    let count = 0;
+
+    for(const n1 of nums1){
+        for(const n2 of nums2){
+            const sum = n1 + n2;
+            twoSumMap.set(sum, (twoSumMap.get(sum) || 0) + 1);
+        }
+    }
+
+    for(const n3 of nums3){
+        for(const n4 of nums4){
+            const sum = n3 + n4;
+            count += (twoSumMap.get(0 - sum) || 0)
+        }
+    }
+    return count;
+};
+```
 
